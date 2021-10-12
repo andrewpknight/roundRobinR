@@ -16,3 +16,5 @@ Imports:
     data.table
 Depends: 
     R (>= 2.10)
+URL: https://github.com/andrewpknight/roundRobinR
+BugReports: https://github.com/andrewpknight/roundRobinR/issues
