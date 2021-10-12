@@ -1,16 +1,18 @@
 Package: roundRobinR
-Title: What the Package Does (One Line, Title Case)
+Title: Manipulate and Analyze Round Robin Dyadic Data
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    person(given = "Andrew",
+           family = "Knight",
            role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+           email = "knightap@wustl.edu")
+Description: Provides utilities for processing and analyzing dyadic data collected using a round robin design, in which each person rates each other person on at least one variable. Functionality for manipulating data focuses on preparing datasets for use in dyadic data analysis. Functionality for analyzing data is grounded in the social relations model and principles of dyadic data analysis. 
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
+Imports: 
+    data.table
+Depends: 
+    R (>= 2.10)
