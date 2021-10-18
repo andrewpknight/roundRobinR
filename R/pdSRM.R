@@ -11,12 +11,13 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' o = lme(liking ~ 1, random=list(groupId=pdBlocked(list(pdIdent(~1),
+#' o = nlme::lme(liking ~ 1, random=list(groupId=nlme::pdBlocked(list(nlme::pdIdent(~1),
 #' pdSRM(~-1 + a1 + a2 + a3 + a4 + p1 + p2 + p3 + p4)))),
-#' correlation=corCompSymm(form=~1 | groupId/pdSRM_dyad_id),
-#' data=d, na.action=na.omit)
-#' }
+#' correlation=nlme::corCompSymm(form=~1 | groupId/pdSRM_dyad_id),
+#' data=
+#' createDummies(group.id="groupId", act.id="actId", part.id="partId",
+#'              d=sampleDyadData[sampleDyadData$timeId==1, ],
+#'                merge.original=TRUE), na.action=na.omit)
 pdSRM <- function (value = numeric(0), form = NULL, nam = NULL, data = sys.frame(sys.parent()))
 {
   object <- numeric(0)

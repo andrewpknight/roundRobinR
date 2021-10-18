@@ -28,10 +28,11 @@ This function is used to create the correct structure for the variance/covarianc
 matrix for a full social relations model.
 }
 \examples{
-\dontrun{
-o = lme(liking ~ 1, random=list(groupId=pdBlocked(list(pdIdent(~1),
+o = nlme::lme(liking ~ 1, random=list(groupId=nlme::pdBlocked(list(nlme::pdIdent(~1),
 pdSRM(~-1 + a1 + a2 + a3 + a4 + p1 + p2 + p3 + p4)))),
-correlation=corCompSymm(form=~1 | groupId/pdSRM_dyad_id),
-data=d, na.action=na.omit)
-}
+correlation=nlme::corCompSymm(form=~1 | groupId/pdSRM_dyad_id),
+data=
+createDummies(group.id="groupId", act.id="actId", part.id="partId",
+             d=sampleDyadData[sampleDyadData$timeId==1, ],
+               merge.original=TRUE), na.action=na.omit)
 }
