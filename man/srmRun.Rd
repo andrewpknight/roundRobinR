@@ -2,37 +2,59 @@
 % Please edit documentation in R/srmRun.R
 \name{srmRun}
 \alias{srmRun}
-\title{Run the Social Relations Model using Multilevel Modeling}
+\title{Run the Social Relations Model Using Multilevel Modeling}
 \usage{
 srmRun(dv, groupId, actId, partId, feVars = NULL, data)
 }
 \arguments{
-\item{dv}{string giving the name of the directed dyadic criterion variable}
+\item{dv}{string; name of the directed dyadic criterion (outcome) variable}
 
-\item{groupId}{string giving the name of the group identifier variable}
+\item{groupId}{string; name of the group identifier variable}
 
-\item{actId}{string giving the name of the actor identifier variable}
+\item{actId}{string; name of the actor identifier variable}
 
-\item{partId}{string giving the name of the partner identifier variable}
+\item{partId}{string; name of the partner identifier variable}
 
-\item{feVars}{vector containing the names of fixed effect variables}
+\item{feVars}{character vector of fixed-effect predictor variable names,
+or \code{NULL} (default) for an intercept-only null model}
 
-\item{data}{data.frame at the directed dyad level}
+\item{data}{a \code{data.frame} at the directed dyad level}
 }
 \value{
-a list with two items:
-\itemize{
-\item lme.output is the full lme output object
-\item srm.output is the variance decomposition with reciprocity correlations
+a named list with two elements:
+\describe{
+  \item{\code{lme.output}}{the full \code{lme} model object}
+  \item{\code{srm.output}}{a \code{data.frame} from \code{\link{srmVarPct}}
+    giving variances, percentages, and reciprocity correlations}
 }
 }
 \description{
-This is a wrapper function to efficiently run the social relations model
-with a basic directed dyad-level dataset. The function will create the
-necessary dummy variables and build out the correct formula for lme.
+A wrapper function that fits the Social Relations Model (SRM) on a
+directed dyadic dataset using restricted maximum likelihood via
+\code{\link[nlme]{lme}}. The function creates the necessary actor and
+partner dummy variables, constructs the SRM covariance structure using
+\code{\link{pdSRM}}, and returns both the raw \code{lme} output and a
+formatted variance decomposition table.
 }
 \examples{
-o = srmRun(dv="liking", groupId="groupId", actId="actId", partId="partId",
-feVars=c("actEx", "partEx", "contact"),
-data=sampleDyadData[sampleDyadData$timeId==1, ])
+o <- srmRun(
+  dv      = "liking",
+  groupId = "groupId",
+  actId   = "actId",
+  partId  = "partId",
+  feVars  = c("actEx", "partEx", "contact"),
+  data    = sampleDyadData[sampleDyadData$timeId == 1, ]
+)
+o$srm.output
+}
+\references{
+Knight, A. P., & Humphrey, S. E. (2019). Dyadic data analysis. In
+S. E. Humphrey & J. M. LeBreton (Eds.), \emph{The Handbook for
+Multilevel Theory, Measurement, and Analysis} (pp. 423--447).
+American Psychological Association.
+\doi{10.1037/0000115-019}
+
+Snijders, T. A. B., & Kenny, D. A. (1999). The social relations model
+for family data: A multilevel approach. \emph{Personal Relationships},
+\emph{6}, 471--486. \doi{10.1111/j.1475-6811.1999.tb00204.x}
 }

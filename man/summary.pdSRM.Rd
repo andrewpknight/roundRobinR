@@ -7,27 +7,38 @@
 \method{summary}{pdSRM}(object, structName = "Social Relations Model", ...)
 }
 \arguments{
-\item{object}{an object inheriting from pdSRM}
+\item{object}{an object inheriting from \code{pdSRM}}
 
-\item{structName}{an optional character string with a description of the pdSRM class}
+\item{structName}{a character string describing the covariance structure;
+defaults to \code{"Social Relations Model"}}
 
-\item{...}{optional arguments for some methods}
+\item{...}{optional arguments passed to other methods}
 }
 \value{
-an object similar to object, with additional attributes structName
+an object of class \code{summary.pdMat} with additional attributes
+\code{structName} and \code{noCorrelation}
 }
 \description{
-This function is used internally as part of the construction of the pdSRM
-object that will fit the appropriate structure for the SRM.
-Attributes structNsame and noCorrelation, with the values of the
-corresponding arguments to the method function, are appended
-to object and its class is changed to summary.pdSRM
+Internal method that produces a \code{summary.pdMat} representation of
+a \code{pdSRM} object, used by \code{\link[nlme]{lme}} when printing
+model output.
 }
 \examples{
 \dontrun{
-o = lme(liking ~ 1, random=list(groupId=pdBlocked(list(pdIdent(~1),
-pdSRM(~-1 + a1 + a2 + a3 + a4 + p1 + p2 + p3 + p4)))),
-correlation=corCompSymm(form=~1 | groupId/pdSRM_dyad_id),
-data=d, na.action=na.omit)
+d <- createDummies(
+  group.id = "groupId", act.id = "actId", part.id = "partId",
+  d = sampleDyadData[sampleDyadData$timeId == 1, ],
+  merge.original = TRUE
+)
+o <- nlme::lme(
+  liking ~ 1,
+  random = list(groupId = nlme::pdBlocked(list(
+    nlme::pdIdent(~1),
+    pdSRM(~ -1 + a1 + a2 + a3 + a4 + p1 + p2 + p3 + p4)
+  ))),
+  correlation = nlme::corCompSymm(form = ~1 | groupId / pdSRM_dyad_id),
+  data = d,
+  na.action = stats::na.omit
+)
 }
 }

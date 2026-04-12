@@ -2,41 +2,59 @@
 % Please edit documentation in R/createDummies.R
 \name{createDummies}
 \alias{createDummies}
-\title{Create dummy variables}
+\title{Create Dummy Variables for the Social Relations Model}
 \usage{
-createDummies(
-  group.id,
-  act.id,
-  part.id,
-  d,
-  include.self = FALSE,
-  merge.original = FALSE
-)
+createDummies(group.id, act.id, part.id, d,
+              include.self = FALSE, merge.original = FALSE)
 }
 \arguments{
-\item{group.id}{string variable name that is the group identifier}
+\item{group.id}{string; name of the group identifier variable}
 
-\item{act.id}{string variable name that is the actor identifier}
+\item{act.id}{string; name of the actor identifier variable}
 
-\item{part.id}{string variable name that is the partner identifier}
+\item{part.id}{string; name of the partner identifier variable}
 
-\item{d}{data.frame structured in directed dyadic long-form}
+\item{d}{a \code{data.frame} structured in directed dyadic long-form,
+with one row per ordered (actor, partner) pair}
 
-\item{include.self}{boolean indicating whether to include self ratings}
+\item{include.self}{logical; if \code{TRUE} self-ratings (actor ==
+partner) are retained. Default is \code{FALSE}}
 
-\item{merge.original}{boolean indicating whether to return the input
-dataset with the new identifiers}
+\item{merge.original}{logical; if \code{TRUE} the generated identifiers
+and dummy variables are merged back onto the original dataset and
+returned together. Default is \code{FALSE}}
 }
 \value{
-data.frame giving a new set of unique identifiers and the dummy
-variables needed to run an SRM using multilevel modeling
+a \code{data.frame} containing:
+\describe{
+  \item{\code{pdSRM_act_id}}{integer internal actor identifier}
+  \item{\code{pdSRM_part_id}}{integer internal partner identifier}
+  \item{\code{pdSRM_act_num}}{integer actor slot number within group}
+  \item{\code{pdSRM_part_num}}{integer partner slot number within group}
+  \item{\code{pdSRM_dyad_id}}{integer undirected dyad identifier}
+  \item{\code{a1}, \code{a2}, \ldots}{actor dummy variables}
+  \item{\code{p1}, \code{p2}, \ldots}{partner dummy variables}
+}
+If \code{merge.original = TRUE}, all original variables are appended.
 }
 \description{
-Generate a series of dummy variables for the actor and partner, following
-the process designed by Kenny & Snijders (1999). This generates N dummies
-for actor and N dummies for partner, where N is the maximum group size
-in the dataset
+Generates the actor and partner dummy variables required to fit the
+Social Relations Model (SRM) using multilevel modeling, following the
+approach of Snijders and Kenny (1999). The function produces \emph{N}
+actor dummies and \emph{N} partner dummies, where \emph{N} is the
+maximum group size in the dataset.
 }
 \examples{
-o = createDummies(group.id="groupId", act.id="actId", part.id="partId", d=sampleDyadData)
+d_out <- createDummies(
+  group.id = "groupId",
+  act.id   = "actId",
+  part.id  = "partId",
+  d        = sampleDyadData
+)
+head(d_out)
+}
+\references{
+Snijders, T. A. B., & Kenny, D. A. (1999). The social relations model
+for family data: A multilevel approach. \emph{Personal Relationships},
+\emph{6}, 471--486. \doi{10.1111/j.1475-6811.1999.tb00204.x}
 }

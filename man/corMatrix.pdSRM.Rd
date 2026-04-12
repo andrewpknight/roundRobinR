@@ -7,25 +7,35 @@
 \method{corMatrix}{pdSRM}(object, ...)
 }
 \arguments{
-\item{object}{an object inheriting from pdSRM}
+\item{object}{an object inheriting from \code{pdSRM}}
 
-\item{...}{some methods for this require additional arguments}
+\item{...}{additional arguments (currently unused)}
 }
 \value{
 the correlation matrix corresponding to the positive-definite
-matrix represented by object
+matrix represented by \code{object}, with a \code{"stdDev"} attribute
+giving the standard deviations
 }
 \description{
-This function is used internally as part of the construction of the pdSRM
-object that will fit the appropriate structure for the SRM. The correlation matrix
-corresponding to the positive-definite matrix represented by object is
-obtained.
+Internal method called by \code{\link[nlme]{corMatrix}} to reconstruct
+the correlation matrix from the compressed SRM parameters.
 }
 \examples{
 \dontrun{
-o = lme(liking ~ 1, random=list(groupId=pdBlocked(list(pdIdent(~1),
-pdSRM(~-1 + a1 + a2 + a3 + a4 + p1 + p2 + p3 + p4)))),
-correlation=corCompSymm(form=~1 | groupId/pdSRM_dyad_id),
-data=d, na.action=na.omit)
+d <- createDummies(
+  group.id = "groupId", act.id = "actId", part.id = "partId",
+  d = sampleDyadData[sampleDyadData$timeId == 1, ],
+  merge.original = TRUE
+)
+o <- nlme::lme(
+  liking ~ 1,
+  random = list(groupId = nlme::pdBlocked(list(
+    nlme::pdIdent(~1),
+    pdSRM(~ -1 + a1 + a2 + a3 + a4 + p1 + p2 + p3 + p4)
+  ))),
+  correlation = nlme::corCompSymm(form = ~1 | groupId / pdSRM_dyad_id),
+  data = d,
+  na.action = stats::na.omit
+)
 }
 }

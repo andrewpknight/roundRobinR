@@ -2,40 +2,61 @@
 % Please edit documentation in R/srmPseudoRSq.R
 \name{srmPseudoRSq}
 \alias{srmPseudoRSq}
-\title{Calculate a Pseudo R-Squared for the Social Relations Model}
+\title{Calculate Pseudo R-Squared Values for the Social Relations Model}
 \usage{
 srmPseudoRSq(null.model, predict.model)
 }
 \arguments{
-\item{null.model}{an lme output object fit using pdSRM, without covariates}
+\item{null.model}{an \code{lme} object fitted with \code{\link{pdSRM}}
+and no fixed-effect predictors (intercept only)}
 
-\item{predict.model}{an lme output object fit using pdSRM, with covariates}
+\item{predict.model}{an \code{lme} object fitted with \code{\link{pdSRM}}
+and one or more fixed-effect predictors; must use the same dataset and
+random effects structure as \code{null.model}}
 }
 \value{
-data.frame with variances from a null and predict model and the
-estimated pseudo r-squared values
+a \code{data.frame} with three columns and four rows (Group,
+Actor, Partner, Dyad):
+\describe{
+  \item{\code{null}}{variance component from the null model}
+  \item{\code{predict}}{variance component from the predictor model}
+  \item{\code{pseudoR2}}{pseudo R-squared: \code{(null - predict) / null}}
+}
 }
 \description{
-Provides an estimated pseudo r-squared value based on the comparison
-between a null model and a model with fixed effects
+Computes pseudo R-squared values for each SRM variance component by
+comparing a null model (intercept only) with a predictor model (with
+fixed effects). The pseudo R-squared for each component is
+\code{(null - predicted) / null}, reflecting the proportion of each
+variance component explained by the fixed effects.
 }
 \examples{
-o = srmPseudoRSq(null.model=nlme::lme(liking ~ 1,
-random=list(groupId=nlme::pdBlocked(list(nlme::pdIdent(~1),
-pdSRM(~-1 + a1 + a2 + a3 + a4 + p1 + p2 + p3 + p4)))),
-correlation=nlme::corCompSymm(form=~1 | groupId/pdSRM_dyad_id),
-data=
-createDummies(group.id="groupId", act.id="actId", part.id="partId",
-             d=sampleDyadData[sampleDyadData$timeId==1, ],
-               merge.original=TRUE), na.action=na.omit),
-               predict.model= nlme::lme(liking ~ groupCohesion +
-               actEx + partEx + contact,
-               random=list(groupId=nlme::pdBlocked(list(nlme::pdIdent(~1),
-               pdSRM(~-1 + a1 + a2 + a3 + a4 + p1 + p2 + p3 + p4)))),
-               correlation=nlme::corCompSymm(form=~1 |
-               groupId/pdSRM_dyad_id),
-             createDummies(group.id="groupId",
-             act.id="actId", part.id="partId",
-             d=sampleDyadData[sampleDyadData$timeId==1, ],
-             merge.original=TRUE), na.action=na.omit))
+\donttest{
+d <- createDummies(
+  group.id = "groupId", act.id = "actId", part.id = "partId",
+  d = sampleDyadData[sampleDyadData$timeId == 1, ],
+  merge.original = TRUE
+)
+null_mod <- nlme::lme(
+  liking ~ 1,
+  random = list(groupId = nlme::pdBlocked(list(
+    nlme::pdIdent(~1),
+    pdSRM(~ -1 + a1 + a2 + a3 + a4 + p1 + p2 + p3 + p4)
+  ))),
+  correlation = nlme::corCompSymm(form = ~1 | groupId / pdSRM_dyad_id),
+  data = d,
+  na.action = stats::na.omit
+)
+pred_mod <- nlme::lme(
+  liking ~ actEx + partEx + contact,
+  random = list(groupId = nlme::pdBlocked(list(
+    nlme::pdIdent(~1),
+    pdSRM(~ -1 + a1 + a2 + a3 + a4 + p1 + p2 + p3 + p4)
+  ))),
+  correlation = nlme::corCompSymm(form = ~1 | groupId / pdSRM_dyad_id),
+  data = d,
+  na.action = stats::na.omit
+)
+srmPseudoRSq(null.model = null_mod, predict.model = pred_mod)
+}
 }

@@ -2,28 +2,51 @@
 % Please edit documentation in R/srmVarPct.R
 \name{srmVarPct}
 \alias{srmVarPct}
-\title{Extract Variance Decomposition Results from pdSRM Output}
+\title{Extract Variance Decomposition from a Fitted SRM}
 \usage{
 srmVarPct(object)
 }
 \arguments{
-\item{object}{an lme output object with the SRM structure}
+\item{object}{an \code{lme} model object fitted with \code{\link{pdSRM}}}
 }
 \value{
-data.frame with the variance-covariance parameters, percentages, and
-the reciprocity correlations
+a \code{data.frame} with two columns and six rows:
+\describe{
+  \item{\code{variances.and.covariances}}{Group, Actor, Partner, and
+    Dyad variances; Generalized Reciprocity covariance; Dyadic
+    Reciprocity covariance}
+  \item{\code{percents.and.correlations}}{variance percentages for the
+    four components; Generalized Reciprocity correlation; Dyadic
+    Reciprocity correlation}
+}
 }
 \description{
-Returns the breakdown of variance components and reciprocity correlations
-from the output of a multilevel model fitting the SRM according to the
-dummy variable specification.
+Extracts and formats the variance components and reciprocity correlations
+from an \code{\link[nlme]{lme}} object fitted with the
+\code{\link{pdSRM}} covariance structure. Returns group, actor, partner,
+and dyadic (relationship) variances as both raw values and percentages of
+total variance, along with generalized reciprocity (actor-partner
+correlation) and dyadic reciprocity.
 }
 \examples{
-o = srmVarPct(nlme::lme(liking ~ 1, random=list(groupId=nlme::pdBlocked(list(nlme::pdIdent(~1),
-pdSRM(~-1 + a1 + a2 + a3 + a4 + p1 + p2 + p3 + p4)))),
-correlation=nlme::corCompSymm(form=~1 | groupId/pdSRM_dyad_id),
-data=
-createDummies(group.id="groupId", act.id="actId", part.id="partId",
-d=sampleDyadData[sampleDyadData$timeId==1, ],
-merge.original=TRUE), na.action=na.omit))
+d <- createDummies(
+  group.id = "groupId", act.id = "actId", part.id = "partId",
+  d = sampleDyadData[sampleDyadData$timeId == 1, ],
+  merge.original = TRUE
+)
+o <- nlme::lme(
+  liking ~ 1,
+  random = list(groupId = nlme::pdBlocked(list(
+    nlme::pdIdent(~1),
+    pdSRM(~ -1 + a1 + a2 + a3 + a4 + p1 + p2 + p3 + p4)
+  ))),
+  correlation = nlme::corCompSymm(form = ~1 | groupId / pdSRM_dyad_id),
+  data = d,
+  na.action = stats::na.omit
+)
+srmVarPct(o)
+}
+\references{
+Kenny, D. A., Kashy, D. A., & Cook, W. L. (2006).
+\emph{Dyadic Data Analysis}. Guilford Press.
 }

@@ -3,32 +3,38 @@
 \docType{data}
 \name{sampleDyadData}
 \alias{sampleDyadData}
-\title{Sample round robin dataset}
+\title{Sample Round Robin Dataset}
 \format{
-A data frame with 1548 rows of 16 variables
+A data frame with 1548 rows and 16 variables:
 \describe{
-\item{groupId}{integer group identification variable}
-\item{actId}{integer actor identification variable}
-\item{partId}{integer partner identification variable}
-\item{timeId}{integer time identification variable}
-\item{contact}{integer directed dyad-level measure of contact frequency}
-\item{liking}{integer directed dyad-level measure of liking}
-\item{actEx}{numeric individual-level measure of actor extroversion}
-\item{actAg}{numeric individual-level measure of actor agreeableness}
-\item{actMale}{integer individual-level binary indicator of actor gender}
-\item{actAge}{integer individual-level measure of actor age}
-\item{partEx}{numeric individual-level measure of actor extroversion}
-\item{partAg}{numeric individual-level measure of actor agreeableness}
-\item{partMale}{integer individual-level binary indicator of actor gender}
-\item{partAge}{integer individual-level measure of actor age}
-\item{groupCohesion}{numeric group-level measure of group cohesion}
-\item{groupEfficacy}{numeric group-level measure of group efficacy}
+  \item{groupId}{integer; group identification variable}
+  \item{actId}{integer; actor (rater) identification variable}
+  \item{partId}{integer; partner (ratee) identification variable}
+  \item{timeId}{integer; time point identifier (1 or 2)}
+  \item{contact}{integer; directed dyad-level measure of contact frequency}
+  \item{liking}{integer; directed dyad-level measure of liking}
+  \item{actEx}{numeric; actor-level measure of extraversion}
+  \item{actAg}{numeric; actor-level measure of agreeableness}
+  \item{actMale}{integer; actor-level binary gender indicator (1 = male)}
+  \item{actAge}{integer; actor-level age in years}
+  \item{partEx}{numeric; partner-level measure of extraversion}
+  \item{partAg}{numeric; partner-level measure of agreeableness}
+  \item{partMale}{integer; partner-level binary gender indicator (1 = male)}
+  \item{partAge}{integer; partner-level age in years}
+  \item{groupCohesion}{numeric; group-level measure of cohesion}
+  \item{groupEfficacy}{numeric; group-level measure of efficacy}
 }
+}
+\source{
+Simulated data created for package demonstration purposes.
 }
 \usage{
 sampleDyadData
 }
 \description{
-Sample round robin dataset
+A simulated directed dyadic dataset in long format, suitable for
+demonstrating the functions in this package. The dataset contains
+observations from a round-robin design in which each person in a group
+rated every other person. Ratings were collected at two time points.
 }
 \keyword{datasets}

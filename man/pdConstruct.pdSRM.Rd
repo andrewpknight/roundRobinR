@@ -4,17 +4,12 @@
 \alias{pdConstruct.pdSRM}
 \title{Construct pdSRM Object}
 \usage{
-\method{pdConstruct}{pdSRM}(
-  object,
-  value = numeric(0),
-  form = stats::formula(object),
-  nam = nlme::Names(object),
-  data = sys.frame(sys.parent()),
-  ...
-)
+\method{pdConstruct}{pdSRM}(object, value = numeric(0),
+  form = stats::formula(object), nam = nlme::Names(object),
+  data = sys.frame(sys.parent()), ...)
 }
 \arguments{
-\item{object}{an object inheriting from pdSRM}
+\item{object}{an object inheriting from \code{pdSRM}}
 
 \item{value}{an optional initialization value}
 
@@ -24,20 +19,32 @@
 
 \item{data}{an optional data frame in which to evaluate the variables}
 
-\item{...}{optional arguments for some methods}
+\item{...}{optional arguments passed to other methods}
 }
 \value{
-a pdSRM object representing a positive-definite matrix
+a \code{pdSRM} object representing the SRM positive-definite matrix
 }
 \description{
-This function is used internally as part of the construction of the pdSRM
-object that will fit the appropriate structure for the SRM.
+Internal method called by \code{\link[nlme]{pdConstruct}} to initialize
+a \code{pdSRM} object. Enforces the SRM constraint of equal actor
+variances, equal partner variances, and a single actor-partner covariance.
 }
 \examples{
 \dontrun{
-o = lme(liking ~ 1, random=list(groupId=pdBlocked(list(pdIdent(~1),
-pdSRM(~-1 + a1 + a2 + a3 + a4 + p1 + p2 + p3 + p4)))),
-correlation=corCompSymm(form=~1 | groupId/pdSRM_dyad_id),
-data=d, na.action=na.omit)
+d <- createDummies(
+  group.id = "groupId", act.id = "actId", part.id = "partId",
+  d = sampleDyadData[sampleDyadData$timeId == 1, ],
+  merge.original = TRUE
+)
+o <- nlme::lme(
+  liking ~ 1,
+  random = list(groupId = nlme::pdBlocked(list(
+    nlme::pdIdent(~1),
+    pdSRM(~ -1 + a1 + a2 + a3 + a4 + p1 + p2 + p3 + p4)
+  ))),
+  correlation = nlme::corCompSymm(form = ~1 | groupId / pdSRM_dyad_id),
+  data = d,
+  na.action = stats::na.omit
+)
 }
 }

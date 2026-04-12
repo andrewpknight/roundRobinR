@@ -2,28 +2,43 @@
 % Please edit documentation in R/pdMatrix.pdSRM.R
 \name{pdMatrix.pdSRM}
 \alias{pdMatrix.pdSRM}
-\title{Extract Matrix or Square-Root Factor from a pdSRM object}
+\title{Extract Matrix or Square-Root Factor from a pdSRM Object}
 \usage{
 \method{pdMatrix}{pdSRM}(object, factor = FALSE)
 }
 \arguments{
-\item{object}{an object inheriting from pdSRM}
+\item{object}{an object inheriting from \code{pdSRM}}
 
-\item{factor}{an optional logical value}
+\item{factor}{logical; if \code{TRUE} the upper Cholesky factor is
+returned, otherwise the full positive-definite matrix is returned}
 }
 \value{
-if factor is FALSE the positive-definite matrix represented by object;
-else a square-root of the positive-definite matrix is returned
+if \code{factor = FALSE}, the positive-definite matrix represented
+by \code{object}; if \code{factor = TRUE}, the upper Cholesky factor of
+that matrix
 }
 \description{
-This function is used internally as part of the construction of the pdSRM
-object that will fit the appropriate structure for the SRM.
+Internal method called by \code{\link[nlme]{pdMatrix}} to reconstruct
+the full variance-covariance matrix (or its Cholesky factor) from the
+three compressed SRM parameters: actor standard deviation, partner
+standard deviation, and actor-partner correlation.
 }
 \examples{
 \dontrun{
-o = lme(liking ~ 1, random=list(groupId=pdBlocked(list(pdIdent(~1),
-pdSRM(~-1 + a1 + a2 + a3 + a4 + p1 + p2 + p3 + p4)))),
-correlation=corCompSymm(form=~1 | groupId/pdSRM_dyad_id),
-data=d, na.action=na.omit)
+d <- createDummies(
+  group.id = "groupId", act.id = "actId", part.id = "partId",
+  d = sampleDyadData[sampleDyadData$timeId == 1, ],
+  merge.original = TRUE
+)
+o <- nlme::lme(
+  liking ~ 1,
+  random = list(groupId = nlme::pdBlocked(list(
+    nlme::pdIdent(~1),
+    pdSRM(~ -1 + a1 + a2 + a3 + a4 + p1 + p2 + p3 + p4)
+  ))),
+  correlation = nlme::corCompSymm(form = ~1 | groupId / pdSRM_dyad_id),
+  data = d,
+  na.action = stats::na.omit
+)
 }
 }

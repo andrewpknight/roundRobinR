@@ -2,37 +2,59 @@
 % Please edit documentation in R/pdSRM.R
 \name{pdSRM}
 \alias{pdSRM}
-\title{Construct the pdSRM object}
+\title{Construct the pdSRM Object}
 \usage{
-pdSRM(
-  value = numeric(0),
-  form = NULL,
-  nam = NULL,
-  data = sys.frame(sys.parent())
-)
+pdSRM(value = numeric(0), form = NULL, nam = NULL,
+      data = sys.frame(sys.parent()))
 }
 \arguments{
-\item{value}{an optional initialization value}
+\item{value}{an optional initialization value, inherited from
+\code{\link[nlme]{pdMat}}}
 
-\item{form}{an optional one-sided linear formula specifying the row/column names for the matrix}
+\item{form}{an optional one-sided linear formula specifying the
+row/column names for the matrix}
 
-\item{nam}{an optional vector of character strings specifying the row/column names for the matrix}
+\item{nam}{an optional vector of character strings specifying the
+row/column names for the matrix}
 
-\item{data}{inherited from the surrounding nlme call}
+\item{data}{inherited from the surrounding \code{nlme} call}
 }
 \value{
-a pdMat object representing a positive-definite matrix conforming to the SRM structure
+a \code{pdMat} object representing a positive-definite matrix
+conforming to the SRM covariance structure
 }
 \description{
-This function is used to create the correct structure for the variance/covariance
-matrix for a full social relations model.
+Creates the positive-definite matrix class used to specify the
+actor-partner covariance structure of the Social Relations Model within
+\code{\link[nlme]{lme}}. This class enforces the SRM constraint that all
+actors share a single variance, all partners share a single variance, and
+a single actor-partner covariance (generalized reciprocity) is estimated.
 }
 \examples{
-o = nlme::lme(liking ~ 1, random=list(groupId=nlme::pdBlocked(list(nlme::pdIdent(~1),
-pdSRM(~-1 + a1 + a2 + a3 + a4 + p1 + p2 + p3 + p4)))),
-correlation=nlme::corCompSymm(form=~1 | groupId/pdSRM_dyad_id),
-data=
-createDummies(group.id="groupId", act.id="actId", part.id="partId",
-             d=sampleDyadData[sampleDyadData$timeId==1, ],
-               merge.original=TRUE), na.action=na.omit)
+d <- createDummies(
+  group.id = "groupId", act.id = "actId", part.id = "partId",
+  d = sampleDyadData[sampleDyadData$timeId == 1, ],
+  merge.original = TRUE
+)
+o <- nlme::lme(
+  liking ~ 1,
+  random = list(groupId = nlme::pdBlocked(list(
+    nlme::pdIdent(~1),
+    pdSRM(~ -1 + a1 + a2 + a3 + a4 + p1 + p2 + p3 + p4)
+  ))),
+  correlation = nlme::corCompSymm(form = ~1 | groupId / pdSRM_dyad_id),
+  data = d,
+  na.action = stats::na.omit
+)
+}
+\references{
+Knight, A. P., & Humphrey, S. E. (2019). Dyadic data analysis. In
+S. E. Humphrey & J. M. LeBreton (Eds.), \emph{The Handbook for
+Multilevel Theory, Measurement, and Analysis} (pp. 423--447).
+American Psychological Association.
+\doi{10.1037/0000115-019}
+
+Snijders, T. A. B., & Kenny, D. A. (1999). The social relations model
+for family data: A multilevel approach. \emph{Personal Relationships},
+\emph{6}, 471--486. \doi{10.1111/j.1475-6811.1999.tb00204.x}
 }

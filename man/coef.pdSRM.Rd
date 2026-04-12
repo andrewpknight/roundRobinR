@@ -2,30 +2,44 @@
 % Please edit documentation in R/coef.pdSRM.R
 \name{coef.pdSRM}
 \alias{coef.pdSRM}
-\title{Extract model coefficients from pdSRM object}
+\title{Extract Coefficients from a pdSRM Object}
 \usage{
 \method{coef}{pdSRM}(object, unconstrained = TRUE, ...)
 }
 \arguments{
-\item{object}{an object inheriting from pdSRM}
+\item{object}{an object inheriting from \code{pdSRM}}
 
-\item{unconstrained}{a logical value. If TRUE the coefficients are returned
-in unconstrained form. If FALSE the upper triangular elements are returned}
+\item{unconstrained}{logical; if \code{TRUE} (default) the unconstrained
+parameterization is returned; if \code{FALSE} the three named SRM
+parameters are returned}
 
-\item{...}{additional arguments}
+\item{...}{additional arguments (currently unused)}
 }
 \value{
-a vector with the coefficients corresponding to object
+a named numeric vector with elements \code{std. dev-a},
+\code{std. dev-p}, and \code{corr.}
 }
 \description{
-This is used internally as part of the construction of the pdSRM
-object that will fit the appropriate structure for the SRM.
+Internal method called by \code{\link[nlme]{coef.pdMat}} to extract the
+three underlying SRM parameters: actor standard deviation, partner
+standard deviation, and actor-partner correlation.
 }
 \examples{
 \dontrun{
-o = lme(liking ~ 1, random=list(groupId=pdBlocked(list(pdIdent(~1),
-pdSRM(~-1 + a1 + a2 + a3 + a4 + p1 + p2 + p3 + p4)))),
-correlation=corCompSymm(form=~1 | groupId/pdSRM_dyad_id),
-data=d, na.action=na.omit)
+d <- createDummies(
+  group.id = "groupId", act.id = "actId", part.id = "partId",
+  d = sampleDyadData[sampleDyadData$timeId == 1, ],
+  merge.original = TRUE
+)
+o <- nlme::lme(
+  liking ~ 1,
+  random = list(groupId = nlme::pdBlocked(list(
+    nlme::pdIdent(~1),
+    pdSRM(~ -1 + a1 + a2 + a3 + a4 + p1 + p2 + p3 + p4)
+  ))),
+  correlation = nlme::corCompSymm(form = ~1 | groupId / pdSRM_dyad_id),
+  data = d,
+  na.action = stats::na.omit
+)
 }
 }

@@ -1,0 +1,166 @@
+---
+title: "Introduction to roundRobinR"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to roundRobinR}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment  = "#>"
+)
+```
+
+```{r setup}
+library(roundRobinR)
+```
+
+## Overview
+
+The `roundRobinR` package provides tools for analyzing directed dyadic data
+collected with a round-robin design, in which every person in a group rates
+or interacts with every other person. The core analytical framework is the
+**Social Relations Model** (SRM; Kenny, Kashy, & Cook, 2006), estimated via
+multilevel modeling following Snijders and Kenny (1999) and Knight and
+Humphrey (2019).
+
+The SRM decomposes the total variance in a directed dyadic outcome into four
+components:
+
+| Component | Interpretation |
+|-----------|----------------|
+| **Group** | How much groups differ in their mean level |
+| **Actor** | How much people differ in what they give or emit |
+| **Partner** | How much people differ in what they receive or elicit |
+| **Dyad** | Variance in the unique relationship between each specific pair |
+
+In addition, two reciprocity parameters are estimated:
+
+- **Generalized reciprocity**: Do people who give a lot also tend to receive a
+  lot? (Actor-partner correlation)
+- **Dyadic reciprocity**: Does person A's unique relationship with person B
+  predict B's unique relationship with A? (Within-dyad relationship
+  correlation)
+
+## The Sample Dataset
+
+The package includes `sampleDyadData`, a simulated dataset with 1,548 rows
+from a round-robin design collected at two time points.
+
+```{r examine-data}
+head(sampleDyadData)
+nrow(sampleDyadData)
+length(unique(sampleDyadData$groupId))
+```
+
+Key variables:
+
+- `groupId`, `actId`, `partId` — group, actor, and partner identifiers
+- `timeId` — time point (1 or 2)
+- `liking` — directed dyadic rating of liking (the main outcome)
+- `actEx`, `partEx` — actor and partner extraversion scores
+- `contact` — dyad-level contact frequency
+- `groupCohesion` — group-level cohesion
+
+## Step 1: Create Dummy Variables
+
+The SRM requires a set of dummy variables for each actor and partner position
+within a group. `createDummies()` generates these automatically.
+
+```{r create-dummies}
+d <- createDummies(
+  group.id       = "groupId",
+  act.id         = "actId",
+  part.id        = "partId",
+  d              = sampleDyadData[sampleDyadData$timeId == 1, ],
+  merge.original = TRUE
+)
+head(d[, c("groupId", "actId", "partId", "pdSRM_dyad_id",
+           "a1", "a2", "a3", "a4", "p1", "p2", "p3", "p4")])
+```
+
+The key output columns are:
+
+- `a1`–`a4`: actor dummy variables (one equals 1 per row, indicating which
+  group position is acting)
+- `p1`–`p4`: partner dummy variables (same, for the partner)
+- `pdSRM_dyad_id`: undirected dyad identifier (shared by i→j and j→i)
+
+## Step 2: Fit the Null SRM
+
+The simplest model decomposes total variance into the four SRM components with
+no predictors. `srmRun()` handles dummy creation and model fitting in one step.
+
+```{r null-model}
+null_mod <- srmRun(
+  dv      = "liking",
+  groupId = "groupId",
+  actId   = "actId",
+  partId  = "partId",
+  data    = sampleDyadData[sampleDyadData$timeId == 1, ]
+)
+null_mod$srm.output
+```
+
+Reading the output:
+
+- `variances.and.covariances`: raw variance estimates for each component
+- `percents.and.correlations`: for the four variance components, the
+  percentage of total variance; for the two reciprocity rows, the
+  correlation coefficients
+
+## Step 3: Fit a Model with Predictors
+
+Adding fixed effects tests whether actor-level, partner-level, or dyad-level
+predictors explain variance in the outcome.
+
+```{r full-model}
+full_mod <- srmRun(
+  dv      = "liking",
+  groupId = "groupId",
+  actId   = "actId",
+  partId  = "partId",
+  feVars  = c("actEx", "partEx", "contact"),
+  data    = sampleDyadData[sampleDyadData$timeId == 1, ]
+)
+full_mod$srm.output
+```
+
+The fixed-effect estimates can be examined with:
+
+```{r fixed-effects}
+summary(full_mod$lme.output)$tTable
+```
+
+## Step 4: Pseudo R-Squared
+
+`srmPseudoRSq()` compares the null and full models to estimate the proportion
+of variance in each component explained by the predictors.
+
+```{r pseudo-r2}
+srmPseudoRSq(
+  null.model    = null_mod$lme.output,
+  predict.model = full_mod$lme.output
+)
+```
+
+A positive `pseudoR2` for a given component means the fixed effects reduced
+that component's variance, suggesting the predictors partly explain the
+group-, actor-, partner-, or relationship-level variation.
+
+## References
+
+Kenny, D. A., Kashy, D. A., & Cook, W. L. (2006). *Dyadic Data Analysis*.
+Guilford Press.
+
+Knight, A. P., & Humphrey, S. E. (2019). Dyadic data analysis. In
+S. E. Humphrey & J. M. LeBreton (Eds.), *The Handbook for Multilevel Theory,
+Measurement, and Analysis* (pp. 423–447). American Psychological Association.
+<https://doi.org/10.1037/0000115-019>
+
+Snijders, T. A. B., & Kenny, D. A. (1999). The social relations model for
+family data: A multilevel approach. *Personal Relationships*, *6*, 471–486.
+<https://doi.org/10.1111/j.1475-6811.1999.tb00204.x>
