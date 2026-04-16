@@ -24,7 +24,7 @@ a \code{pdSRM} object, used by \code{\link[nlme]{lme}} when printing
 model output.
 }
 \examples{
-\dontrun{
+\donttest{
 d <- createDummies(
   group.id = "groupId", act.id = "actId", part.id = "partId",
   d = sampleDyadData[sampleDyadData$timeId == 1, ],

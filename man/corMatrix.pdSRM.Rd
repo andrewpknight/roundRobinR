@@ -21,7 +21,7 @@ Internal method called by \code{\link[nlme]{corMatrix}} to reconstruct
 the correlation matrix from the compressed SRM parameters.
 }
 \examples{
-\dontrun{
+\donttest{
 d <- createDummies(
   group.id = "groupId", act.id = "actId", part.id = "partId",
   d = sampleDyadData[sampleDyadData$timeId == 1, ],

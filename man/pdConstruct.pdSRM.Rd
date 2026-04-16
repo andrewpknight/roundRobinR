@@ -4,9 +4,14 @@
 \alias{pdConstruct.pdSRM}
 \title{Construct pdSRM Object}
 \usage{
-\method{pdConstruct}{pdSRM}(object, value = numeric(0),
-  form = stats::formula(object), nam = nlme::Names(object),
-  data = sys.frame(sys.parent()), ...)
+\method{pdConstruct}{pdSRM}(
+  object,
+  value = numeric(0),
+  form = stats::formula(object),
+  nam = nlme::Names(object),
+  data = sys.frame(sys.parent()),
+  ...
+)
 }
 \arguments{
 \item{object}{an object inheriting from \code{pdSRM}}
@@ -30,7 +35,7 @@ a \code{pdSRM} object. Enforces the SRM constraint of equal actor
 variances, equal partner variances, and a single actor-partner covariance.
 }
 \examples{
-\dontrun{
+\donttest{
 d <- createDummies(
   group.id = "groupId", act.id = "actId", part.id = "partId",
   d = sampleDyadData[sampleDyadData$timeId == 1, ],

@@ -2,10 +2,14 @@
 % Please edit documentation in R/pdSRM.R
 \name{pdSRM}
 \alias{pdSRM}
-\title{Construct the pdSRM Object}
+\title{Construct the pdSRM object}
 \usage{
-pdSRM(value = numeric(0), form = NULL, nam = NULL,
-      data = sys.frame(sys.parent()))
+pdSRM(
+  value = numeric(0),
+  form = NULL,
+  nam = NULL,
+  data = sys.frame(sys.parent())
+)
 }
 \arguments{
 \item{value}{an optional initialization value, inherited from

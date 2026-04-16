@@ -25,7 +25,7 @@ three underlying SRM parameters: actor standard deviation, partner
 standard deviation, and actor-partner correlation.
 }
 \examples{
-\dontrun{
+\donttest{
 d <- createDummies(
   group.id = "groupId", act.id = "actId", part.id = "partId",
   d = sampleDyadData[sampleDyadData$timeId == 1, ],

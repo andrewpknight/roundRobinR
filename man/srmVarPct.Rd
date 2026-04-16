@@ -12,12 +12,12 @@ srmVarPct(object)
 \value{
 a \code{data.frame} with two columns and six rows:
 \describe{
-  \item{\code{variances.and.covariances}}{Group, Actor, Partner, and
-    Dyad variances; Generalized Reciprocity covariance; Dyadic
-    Reciprocity covariance}
-  \item{\code{percents.and.correlations}}{variance percentages for the
-    four components; Generalized Reciprocity correlation; Dyadic
-    Reciprocity correlation}
+\item{\code{variances.and.covariances}}{Group, Actor, Partner, and
+Dyad variances; Generalized Reciprocity covariance; Dyadic
+Reciprocity covariance}
+\item{\code{percents.and.correlations}}{variance percentages for the
+four components; Generalized Reciprocity correlation; Dyadic
+Reciprocity correlation}
 }
 }
 \description{

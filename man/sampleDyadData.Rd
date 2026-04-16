@@ -7,22 +7,22 @@
 \format{
 A data frame with 1548 rows and 16 variables:
 \describe{
-  \item{groupId}{integer; group identification variable}
-  \item{actId}{integer; actor (rater) identification variable}
-  \item{partId}{integer; partner (ratee) identification variable}
-  \item{timeId}{integer; time point identifier (1 or 2)}
-  \item{contact}{integer; directed dyad-level measure of contact frequency}
-  \item{liking}{integer; directed dyad-level measure of liking}
-  \item{actEx}{numeric; actor-level measure of extraversion}
-  \item{actAg}{numeric; actor-level measure of agreeableness}
-  \item{actMale}{integer; actor-level binary gender indicator (1 = male)}
-  \item{actAge}{integer; actor-level age in years}
-  \item{partEx}{numeric; partner-level measure of extraversion}
-  \item{partAg}{numeric; partner-level measure of agreeableness}
-  \item{partMale}{integer; partner-level binary gender indicator (1 = male)}
-  \item{partAge}{integer; partner-level age in years}
-  \item{groupCohesion}{numeric; group-level measure of cohesion}
-  \item{groupEfficacy}{numeric; group-level measure of efficacy}
+\item{groupId}{integer; group identification variable}
+\item{actId}{integer; actor (rater) identification variable}
+\item{partId}{integer; partner (ratee) identification variable}
+\item{timeId}{integer; time point identifier (1 or 2)}
+\item{contact}{integer; directed dyad-level measure of contact frequency}
+\item{liking}{integer; directed dyad-level measure of liking}
+\item{actEx}{numeric; actor-level measure of extraversion}
+\item{actAg}{numeric; actor-level measure of agreeableness}
+\item{actMale}{integer; actor-level binary gender indicator (1 = male)}
+\item{actAge}{integer; actor-level age in years}
+\item{partEx}{numeric; partner-level measure of extraversion}
+\item{partAg}{numeric; partner-level measure of agreeableness}
+\item{partMale}{integer; partner-level binary gender indicator (1 = male)}
+\item{partAge}{integer; partner-level age in years}
+\item{groupCohesion}{numeric; group-level measure of cohesion}
+\item{groupEfficacy}{numeric; group-level measure of efficacy}
 }
 }
 \source{

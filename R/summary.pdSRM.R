@@ -16,7 +16,7 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' d <- createDummies(
 #'   group.id = "groupId", act.id = "actId", part.id = "partId",
 #'   d = sampleDyadData[sampleDyadData$timeId == 1, ],

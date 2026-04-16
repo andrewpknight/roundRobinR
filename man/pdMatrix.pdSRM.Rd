@@ -10,21 +10,20 @@
 \item{object}{an object inheriting from \code{pdSRM}}
 
 \item{factor}{logical; if \code{TRUE} the upper Cholesky factor is
-returned, otherwise the full positive-definite matrix is returned}
+returned, otherwise the full positive-definite matrix}
 }
 \value{
-if \code{factor = FALSE}, the positive-definite matrix represented
-by \code{object}; if \code{factor = TRUE}, the upper Cholesky factor of
-that matrix
+if \code{factor} is \code{FALSE}, the positive-definite matrix
+represented by \code{object}; if \code{TRUE}, an upper triangular
+Cholesky factor with a \code{logDet} attribute
 }
 \description{
-Internal method called by \code{\link[nlme]{pdMatrix}} to reconstruct
-the full variance-covariance matrix (or its Cholesky factor) from the
-three compressed SRM parameters: actor standard deviation, partner
-standard deviation, and actor-partner correlation.
+Internal method called by \code{\link[nlme]{pdMatrix}} to reconstruct the
+full covariance matrix from the three stored SRM parameters (actor SD,
+partner SD, actor-partner correlation).
 }
 \examples{
-\dontrun{
+\donttest{
 d <- createDummies(
   group.id = "groupId", act.id = "actId", part.id = "partId",
   d = sampleDyadData[sampleDyadData$timeId == 1, ],

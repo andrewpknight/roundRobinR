@@ -36,3 +36,8 @@ This is a new package. There are no existing reverse dependencies.
 
 * The `sampleDyadData` dataset is simulated and included in `data/` as an
   `.rda` file. `LazyData: true` is set in DESCRIPTION.
+  
+## Resubmission
+
+Replaced \dontrun{} with \donttest{} in examples for internal pdSRM 
+methods, as requested by CRAN reviewer.

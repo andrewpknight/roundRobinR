@@ -1,6 +1,6 @@
 Package: roundRobinR
 Title: Manipulate and Analyze Round Robin Dyadic Data
-Version: 1.0.0
+Version: 1.0.1
 Authors@R: 
     person(given = "Andrew",
            family = "Knight",

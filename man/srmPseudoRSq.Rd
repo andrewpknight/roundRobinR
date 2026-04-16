@@ -18,9 +18,9 @@ random effects structure as \code{null.model}}
 a \code{data.frame} with three columns and four rows (Group,
 Actor, Partner, Dyad):
 \describe{
-  \item{\code{null}}{variance component from the null model}
-  \item{\code{predict}}{variance component from the predictor model}
-  \item{\code{pseudoR2}}{pseudo R-squared: \code{(null - predict) / null}}
+\item{\code{null}}{variance component from the null model}
+\item{\code{predict}}{variance component from the predictor model}
+\item{\code{pseudoR2}}{pseudo R-squared: \code{(null - predict) / null}}
 }
 }
 \description{

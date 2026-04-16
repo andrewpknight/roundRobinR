@@ -4,8 +4,14 @@
 \alias{createDummies}
 \title{Create Dummy Variables for the Social Relations Model}
 \usage{
-createDummies(group.id, act.id, part.id, d,
-              include.self = FALSE, merge.original = FALSE)
+createDummies(
+  group.id,
+  act.id,
+  part.id,
+  d,
+  include.self = FALSE,
+  merge.original = FALSE
+)
 }
 \arguments{
 \item{group.id}{string; name of the group identifier variable}
@@ -27,13 +33,13 @@ returned together. Default is \code{FALSE}}
 \value{
 a \code{data.frame} containing:
 \describe{
-  \item{\code{pdSRM_act_id}}{integer internal actor identifier}
-  \item{\code{pdSRM_part_id}}{integer internal partner identifier}
-  \item{\code{pdSRM_act_num}}{integer actor slot number within group}
-  \item{\code{pdSRM_part_num}}{integer partner slot number within group}
-  \item{\code{pdSRM_dyad_id}}{integer undirected dyad identifier}
-  \item{\code{a1}, \code{a2}, \ldots}{actor dummy variables}
-  \item{\code{p1}, \code{p2}, \ldots}{partner dummy variables}
+\item{\code{pdSRM_act_id}}{integer internal actor identifier}
+\item{\code{pdSRM_part_id}}{integer internal partner identifier}
+\item{\code{pdSRM_act_num}}{integer actor slot number within group}
+\item{\code{pdSRM_part_num}}{integer partner slot number within group}
+\item{\code{pdSRM_dyad_id}}{integer undirected dyad identifier}
+\item{\code{a1}, \code{a2}, \ldots}{actor dummy variables}
+\item{\code{p1}, \code{p2}, \ldots}{partner dummy variables}
 }
 If \code{merge.original = TRUE}, all original variables are appended.
 }

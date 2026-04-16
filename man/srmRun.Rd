@@ -23,9 +23,9 @@ or \code{NULL} (default) for an intercept-only null model}
 \value{
 a named list with two elements:
 \describe{
-  \item{\code{lme.output}}{the full \code{lme} model object}
-  \item{\code{srm.output}}{a \code{data.frame} from \code{\link{srmVarPct}}
-    giving variances, percentages, and reciprocity correlations}
+\item{\code{lme.output}}{the full \code{lme} model object}
+\item{\code{srm.output}}{a \code{data.frame} from \code{\link{srmVarPct}}
+giving variances, percentages, and reciprocity correlations}
 }
 }
 \description{
