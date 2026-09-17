@@ -28,10 +28,10 @@
 #' @export
 #'
 #' @examples
-#' d <- createDummies(
-#'   group.id = "groupId", act.id = "actId", part.id = "partId",
-#'   d = sampleDyadData[sampleDyadData$timeId == 1, ],
-#'   merge.original = TRUE
+#' d <- create_dummies(
+#'   group_id = "groupId", act_id = "actId", part_id = "partId",
+#'   data = sampleDyadData[sampleDyadData$timeId == 1, ],
+#'   merge_original = TRUE
 #' )
 #' o <- nlme::lme(
 #'   liking ~ 1,
@@ -43,8 +43,8 @@
 #'   data = d,
 #'   na.action = stats::na.omit
 #' )
-#' srmVarPct(o)
-srmVarPct <- function(object) {
+#' srm_var_pct(o)
+srm_var_pct <- function(object) {
 
   variances <- as.numeric(nlme::VarCorr(object)[, 1])
   num.mem   <- (length(variances) - 2) / 2
@@ -53,8 +53,8 @@ srmVarPct <- function(object) {
   part.var  <- variances[num.mem + 2]
   dyd.var   <- variances[length(variances)]
 
-  o.sum <- summary(object)
-  o     <- as.matrix(o.sum$modelStruct$reStruct[[1]])
+  o.sum  <- summary(object)
+  o      <- as.matrix(o.sum$modelStruct$reStruct[[1]])
   ap.cor <- o[(num.mem + 2), 2] / sqrt(o[2, 2] * o[(num.mem + 2), (num.mem + 2)])
   ap.cov <- ap.cor * sqrt(act.var * part.var)
   dyd.cor <- stats::coef(object$modelStruct$corStruct, unconstrained = FALSE)
@@ -81,8 +81,8 @@ srmVarPct <- function(object) {
 
   output <- round(
     as.data.frame(list(
-      variances.and.covariances  = variance.parms,
-      percents.and.correlations  = variance.pcts
+      variances.and.covariances = variance.parms,
+      percents.and.correlations = variance.pcts
     )),
     3
   )

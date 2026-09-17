@@ -1,43 +1,36 @@
-# CRAN Submission Comments
-
 ## Test environments
 
-* Local: macOS (Apple Silicon), R 4.4.x
-* win-builder: R-devel, R-release
-* R-hub: Ubuntu Linux, Fedora Linux, Windows
+* local macOS (aarch64-apple-darwin23), R 4.6.0
+* win-builder (devel: R Under development (unstable) (2026-09-16 r90549 ucrt))
+* win-builder (release: R 4.6.1 (2026-06-24 ucrt))
 
 ## R CMD check results
 
-0 errors | 0 warnings | 1 note
+0 errors | 0 warnings | 0 notes
 
-The single NOTE is:
-
-```
-New submission
-```
-
-This is expected for a new package submission.
+All three environments (local macOS, win-builder devel, win-builder release)
+came back clean.
 
 ## Downstream dependencies
 
-This is a new package. There are no existing reverse dependencies.
+There are currently no reverse dependencies for this package.
 
-## Notes for CRAN reviewers
+## This submission
 
-* The package implements a custom `nlme` covariance class (`pdSRM`) to
-  enforce the variance-covariance constraints of the Social Relations Model
-  (Kenny et al., 2006; Snijders & Kenny, 1999). This requires several S3
-  method exports for internal `nlme` generics (`pdConstruct`, `pdMatrix`,
-  `corMatrix`, `coef`, `summary`).
+This is a major release (1.1.0 -> 2.0.0) that:
 
-* Examples for `srmPseudoRSq()` and the internal `pdSRM` class methods are
-  wrapped in `\donttest{}` because they require fitting two `lme` models,
-  which exceeds the 5-second CRAN example time limit on some platforms.
-
-* The `sampleDyadData` dataset is simulated and included in `data/` as an
-  `.rda` file. `LazyData: true` is set in DESCRIPTION.
-  
-## Resubmission
-
-Replaced \dontrun{} with \donttest{} in examples for internal pdSRM 
-methods, as requested by CRAN reviewer.
+* Adds the Co-Partner Social Relations Model (cpsrm): a dyadic/triadic
+  variance-decomposition model for data in which each observation involves
+  one actor and all other members of a group acting simultaneously as
+  partners (e.g., three-person teams). This is a new model class for the
+  package, alongside the existing standard Social Relations Model (SRM)
+  functionality. Includes a full-control fitting function (cpsrm_run())
+  and a friendly wrapper (cpsrm()) that builds the required dummy matrices
+  from raw long-format data.
+* Renames several existing functions to snake_case for naming consistency
+  (e.g., srmRun -> srm_run, createDummies -> create_dummies). Every old
+  name remains available and fully functional, emitting a deprecation
+  warning that points to the new name -- no user-facing breaking changes.
+* Adds documentation on RAW vs. COMBINED variance-decomposition reporting
+  and boundary-corrected likelihood-ratio-test guidance for variance
+  components, in cpsrm_run()'s help page.

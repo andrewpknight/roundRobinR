@@ -8,17 +8,17 @@
 #' formatted variance decomposition table.
 #'
 #' @param dv string; name of the directed dyadic criterion (outcome) variable
-#' @param groupId string; name of the group identifier variable
-#' @param actId string; name of the actor identifier variable
-#' @param partId string; name of the partner identifier variable
-#' @param feVars character vector of fixed-effect predictor variable names,
+#' @param group_id string; name of the group identifier variable
+#' @param act_id string; name of the actor identifier variable
+#' @param part_id string; name of the partner identifier variable
+#' @param fe_vars character vector of fixed-effect predictor variable names,
 #'   or \code{NULL} (default) for an intercept-only null model
 #' @param data a \code{data.frame} at the directed dyad level
 #'
 #' @return a named list with two elements:
 #' \describe{
 #'   \item{\code{lme.output}}{the full \code{lme} model object}
-#'   \item{\code{srm.output}}{a \code{data.frame} from \code{\link{srmVarPct}}
+#'   \item{\code{srm.output}}{a \code{data.frame} from \code{\link{srm_var_pct}}
 #'     giving variances, percentages, and reciprocity correlations}
 #' }
 #'
@@ -37,34 +37,32 @@
 #' @export
 #'
 #' @examples
-#' o <- srmRun(
-#'   dv      = "liking",
-#'   groupId = "groupId",
-#'   actId   = "actId",
-#'   partId  = "partId",
-#'   feVars  = c("actEx", "partEx", "contact"),
-#'   data    = sampleDyadData[sampleDyadData$timeId == 1, ]
+#' o <- srm_run(
+#'   dv       = "liking",
+#'   group_id = "groupId",
+#'   act_id   = "actId",
+#'   part_id  = "partId",
+#'   fe_vars  = c("actEx", "partEx", "contact"),
+#'   data     = sampleDyadData[sampleDyadData$timeId == 1, ]
 #' )
 #' o$srm.output
-srmRun <- function(dv, groupId, actId, partId, feVars = NULL, data) {
+srm_run <- function(dv, group_id, act_id, part_id, fe_vars = NULL, data) {
 
-  d <- createDummies(
-    group.id       = groupId,
-    act.id         = actId,
-    part.id        = partId,
-    d              = data,
-    include.self   = FALSE,
-    merge.original = TRUE
+  d <- create_dummies(
+    group_id       = group_id,
+    act_id         = act_id,
+    part_id        = part_id,
+    data           = data,
+    include_self   = FALSE,
+    merge_original = TRUE
   )
 
-  maxGroupSize <- max(d$pdSRM_act_num)
+  maxGroupSize     <- max(d$pdSRM_act_num)
+  d$pdSRM_group_id <- d[[group_id]]
 
-  # Use a temporary column name to avoid the groupId-string-vs-column bug
-  d$pdSRM_group_id <- d[[groupId]]
-
-  if (!is.null(feVars)) {
+  if (!is.null(fe_vars)) {
     fixClause <- stats::formula(
-      paste(dv, "~", paste(feVars, collapse = "+"))
+      paste(dv, "~", paste(fe_vars, collapse = "+"))
     )
   } else {
     fixClause <- stats::formula(paste(dv, "~ 1"))
@@ -92,7 +90,7 @@ srmRun <- function(dv, groupId, actId, partId, feVars = NULL, data) {
     na.action   = stats::na.omit
   )
 
-  o.pct      <- srmVarPct(o)
+  o.pct      <- srm_var_pct(o)
   outputList <- list("lme.output" = o, "srm.output" = o.pct)
   return(outputList)
 }
