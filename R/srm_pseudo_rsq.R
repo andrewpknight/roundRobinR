@@ -6,11 +6,11 @@
 #' \code{(null - predicted) / null}, reflecting the proportion of each
 #' variance component explained by the fixed effects.
 #'
-#' @param null.model an \code{lme} object fitted with \code{\link{pdSRM}}
+#' @param null_model an \code{lme} object fitted with \code{\link{pdSRM}}
 #'   and no fixed-effect predictors (intercept only)
-#' @param predict.model an \code{lme} object fitted with \code{\link{pdSRM}}
+#' @param predict_model an \code{lme} object fitted with \code{\link{pdSRM}}
 #'   and one or more fixed-effect predictors; must use the same dataset and
-#'   random effects structure as \code{null.model}
+#'   random effects structure as \code{null_model}
 #'
 #' @return a \code{data.frame} with three columns and four rows (Group,
 #'   Actor, Partner, Dyad):
@@ -25,10 +25,10 @@
 #'
 #' @examples
 #' \donttest{
-#' d <- createDummies(
-#'   group.id = "groupId", act.id = "actId", part.id = "partId",
-#'   d = sampleDyadData[sampleDyadData$timeId == 1, ],
-#'   merge.original = TRUE
+#' d <- create_dummies(
+#'   group_id = "groupId", act_id = "actId", part_id = "partId",
+#'   data = sampleDyadData[sampleDyadData$timeId == 1, ],
+#'   merge_original = TRUE
 #' )
 #' null_mod <- nlme::lme(
 #'   liking ~ 1,
@@ -50,9 +50,9 @@
 #'   data = d,
 #'   na.action = stats::na.omit
 #' )
-#' srmPseudoRSq(null.model = null_mod, predict.model = pred_mod)
+#' srm_pseudo_rsq(null_model = null_mod, predict_model = pred_mod)
 #' }
-srmPseudoRSq <- function(null.model, predict.model) {
+srm_pseudo_rsq <- function(null_model, predict_model) {
 
   extract_vcs <- function(mod) {
     variances <- as.numeric(nlme::VarCorr(mod)[, 1])
@@ -65,8 +65,8 @@ srmPseudoRSq <- function(null.model, predict.model) {
     )
   }
 
-  null.vals    <- extract_vcs(null.model)
-  predict.vals <- extract_vcs(predict.model)
+  null.vals    <- extract_vcs(null_model)
+  predict.vals <- extract_vcs(predict_model)
 
   tab <- data.frame(
     null    = null.vals,

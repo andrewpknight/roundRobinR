@@ -6,14 +6,14 @@
 #' actor dummies and \emph{N} partner dummies, where \emph{N} is the
 #' maximum group size in the dataset.
 #'
-#' @param group.id string; name of the group identifier variable
-#' @param act.id string; name of the actor identifier variable
-#' @param part.id string; name of the partner identifier variable
-#' @param d a \code{data.frame} structured in directed dyadic long-form,
+#' @param group_id string; name of the group identifier variable
+#' @param act_id string; name of the actor identifier variable
+#' @param part_id string; name of the partner identifier variable
+#' @param data a \code{data.frame} structured in directed dyadic long-form,
 #'   with one row per ordered (actor, partner) pair
-#' @param include.self logical; if \code{TRUE} self-ratings (actor ==
+#' @param include_self logical; if \code{TRUE} self-ratings (actor ==
 #'   partner) are retained. Default is \code{FALSE}
-#' @param merge.original logical; if \code{TRUE} the generated identifiers
+#' @param merge_original logical; if \code{TRUE} the generated identifiers
 #'   and dummy variables are merged back onto the original dataset and
 #'   returned together. Default is \code{FALSE}
 #'
@@ -27,7 +27,7 @@
 #'     \item{\code{a1}, \code{a2}, \ldots}{actor dummy variables}
 #'     \item{\code{p1}, \code{p2}, \ldots}{partner dummy variables}
 #'   }
-#'   If \code{merge.original = TRUE}, all original variables are appended.
+#'   If \code{merge_original = TRUE}, all original variables are appended.
 #'
 #' @references
 #' Snijders, T. A. B., & Kenny, D. A. (1999). The social relations model
@@ -38,25 +38,26 @@
 #' @export
 #'
 #' @examples
-#' d_out <- createDummies(
-#'   group.id = "groupId",
-#'   act.id   = "actId",
-#'   part.id  = "partId",
-#'   d        = sampleDyadData
+#' d_out <- create_dummies(
+#'   group_id = "groupId",
+#'   act_id   = "actId",
+#'   part_id  = "partId",
+#'   data     = sampleDyadData
 #' )
 #' head(d_out)
-createDummies <- function(group.id, act.id, part.id, d,
-                           include.self = FALSE, merge.original = FALSE) {
+create_dummies <- function(group_id, act_id, part_id, data,
+                            include_self   = FALSE,
+                            merge_original = FALSE) {
 
   # Silence R CMD check NOTEs for data.table variables
   .N <- orig_group_id <- NULL
 
-  d <- d[with(d, order(d[, group.id], d[, act.id], d[, part.id])), ]
+  d <- data[with(data, order(data[, group_id], data[, act_id], data[, part_id])), ]
 
-  d.sub <- d[, c(group.id, act.id, part.id)]
+  d.sub <- d[, c(group_id, act_id, part_id)]
 
-  d.sub$act_indiv_id  <- paste(d.sub[, group.id], d.sub[, act.id],  sep = "_-")
-  d.sub$part_indiv_id <- paste(d.sub[, group.id], d.sub[, part.id], sep = "_-")
+  d.sub$act_indiv_id  <- paste(d.sub[, group_id], d.sub[, act_id],  sep = "_-")
+  d.sub$part_indiv_id <- paste(d.sub[, group_id], d.sub[, part_id], sep = "_-")
 
   acts   <- unique(d.sub$act_indiv_id)
   parts  <- unique(d.sub$part_indiv_id)
@@ -113,7 +114,7 @@ createDummies <- function(group.id, act.id, part.id, d,
     res[, paste0("p", i)] <- as.integer(res$part_num == i)
   }
 
-  if (!include.self) {
+  if (!include_self) {
     res <- res[res$unique_act_id != res$unique_part_id, ]
   }
 
@@ -152,15 +153,15 @@ createDummies <- function(group.id, act.id, part.id, d,
   colnames(res2)[ncol(res2)] <- "orig_part_id"
 
   colnames(res2) <- c(
-    group.id,
+    group_id,
     "pdSRM_part_id", "pdSRM_act_id", "pdSRM_act_num", "pdSRM_part_num",
     paste0("a", seq_len(max_group_size)),
     paste0("p", seq_len(max_group_size)),
-    "pdSRM_dyad_id", act.id, part.id
+    "pdSRM_dyad_id", act_id, part_id
   )
 
   col_order <- c(
-    group.id, act.id, part.id,
+    group_id, act_id, part_id,
     "pdSRM_act_id", "pdSRM_part_id", "pdSRM_dyad_id",
     "pdSRM_act_num", "pdSRM_part_num",
     paste0("a", seq_len(max_group_size)),
@@ -168,19 +169,19 @@ createDummies <- function(group.id, act.id, part.id, d,
   )
 
   res3 <- res2[
-    with(res2, order(res2[, group.id], res2[, "pdSRM_act_id"], res2[, "pdSRM_part_id"])),
+    with(res2, order(res2[, group_id], res2[, "pdSRM_act_id"], res2[, "pdSRM_part_id"])),
     col_order
   ]
 
   # Merge with the original dataset, first removing any pre-existing
   # dummy columns to avoid .x/.y name conflicts
-  if (merge.original) {
-    dummy_pattern <- paste0("^(", 
+  if (merge_original) {
+    dummy_pattern <- paste0("^(",
       paste(c(paste0("a", seq_len(max_group_size)),
-              paste0("p", seq_len(max_group_size))), collapse="|"),
+              paste0("p", seq_len(max_group_size))), collapse = "|"),
       ")$")
     d_clean <- d[, !grepl(dummy_pattern, names(d)), drop = FALSE]
-    res4 <- merge(res3, d_clean, by = c(group.id, act.id, part.id), all.x = TRUE)
+    res4 <- merge(res3, d_clean, by = c(group_id, act_id, part_id), all.x = TRUE)
     return(res4)
   } else {
     return(res3)
