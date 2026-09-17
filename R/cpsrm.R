@@ -48,11 +48,29 @@
 #'
 #' @examples
 #' \donttest{
+#' # cpsrm() expects one row per PERSON per GROUP, with every other group
+#' # member treated as a simultaneous co-partner (e.g. one row per player
+#' # per team, as in three-person golf teams). sampleDyadData is a
+#' # round-robin/directed-dyad dataset (multiple rows per actor per group,
+#' # one per rated partner) and is NOT the right shape for this function --
+#' # see create_dummies()/srm_run() for that design instead. This example
+#' # simulates a small, correctly-shaped dataset: 30 three-person teams
+#' # drawn from a pool of 90 players.
+#' set.seed(1)
+#' team_dat <- do.call(rbind, lapply(1:30, function(g) {
+#'   data.frame(player = sample(1:90, 3), team = g)
+#' }))
+#' team_dat$score <- rnorm(nrow(team_dat), mean = 70, sd = 3)
+#'
 #' fit <- cpsrm(
-#'   data     = sampleDyadData[sampleDyadData$timeId == 1, ],
-#'   dv       = "score",
-#'   actor_id = "actId",
-#'   group_id = "groupId"
+#'   data         = team_dat,
+#'   dv           = "score",
+#'   actor_id     = "player",
+#'   group_id     = "team",
+#'   zero_rho     = TRUE,     # keep the toy example fast/well-behaved
+#'   se_method    = "none",
+#'   stage1_maxit = 100,
+#'   stage2_maxit = 100
 #' )
 #' print(fit)
 #' }

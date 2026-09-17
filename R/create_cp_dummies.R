@@ -57,11 +57,23 @@
 #'
 #' @examples
 #' \donttest{
-#' # Create co-partner dummies from sample data
+#' # create_cp_dummies() expects one row per PERSON per GROUP, with every
+#' # other group member treated as a simultaneous co-partner (e.g. one row
+#' # per player per team, as in three-person golf teams). sampleDyadData is
+#' # a round-robin/directed-dyad dataset (multiple rows per actor per
+#' # group, one per rated partner) and is NOT the right shape for this
+#' # function -- see create_dummies()/srm_run() for that design instead.
+#' # This example simulates a small, correctly-shaped dataset: 30
+#' # three-person teams drawn from a pool of 90 players.
+#' set.seed(1)
+#' team_dat <- do.call(rbind, lapply(1:30, function(g) {
+#'   data.frame(player = sample(1:90, 3), team = g)
+#' }))
+#'
 #' dummies <- create_cp_dummies(
-#'   data        = sampleDyadData[sampleDyadData$timeId == 1, ],
-#'   actor_id    = "actId",
-#'   group_id    = "groupId"
+#'   data        = team_dat,
+#'   actor_id    = "player",
+#'   group_id    = "team"
 #' )
 #' cat("Persons:", dummies$n_persons, "\n")
 #' cat("Groups:", dummies$n_groups, "\n")
